@@ -1,1 +1,380 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- ARG Hint: Meta tags often hide clues -->
+    <meta name="author" content="YS-LM-Admin-NULL">
+    <meta name="description" content="云森市失传媒体资源管理局 - 整理、归档、公开，并记录那些被遗忘的内容。系统状态：01:17异常监控中。">
+    <title>云森市失传媒体资源管理局 | 公共档案系统</title>
+    <style>
+        /* Web 1.0 / 2000s Government Intranet Style */
+        body {
+            background-color: #E0E0E0;
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAABZJREFUeNpi/P//PwM6YGLAAjgUBAgwADZ8Br1+k0pVAAAAAElFTkSuQmCC');
+            color: #333;
+            font-family: "SimSun", "Songti SC", "Times New Roman", serif; 
+            margin: 0;
+            padding: 15px;
+            font-size: 14px;
+        }
 
+        /* Link States mimicking old browsers */
+        a:link { color: #0000EE; }
+        a:visited { color: #551A8B; }
+        a:hover { color: #FF0000; text-decoration: underline; cursor: help; }
+        a:active { color: #FF0000; }
+
+        /* Main Window Container */
+        .window {
+            width: 800px;
+            margin: 0 auto;
+            background-color: #F5F5F5;
+            border: 2px solid #888;
+            box-shadow: 4px 4px 0px #555;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header Section */
+        header {
+            background-color: #003366; 
+            color: #FFF;
+            padding: 15px;
+            text-align: center;
+            border-bottom: 4px solid #999;
+        }
+
+        header img {
+            max-height: 80px;
+            vertical-align: middle;
+            filter: drop-shadow(0 0 2px rgba(255,255,255,0.3));
+        }
+
+        header h1 {
+            font-family: "Heiti SC", "SimHei", sans-serif;
+            font-size: 22px;
+            margin: 10px 0 5px 0;
+            letter-spacing: 1px;
+            font-weight: bold;
+        }
+
+        header .sub-text {
+            font-size: 12px;
+            color: #AAB;
+            font-family: "Courier New", monospace;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            background-color: #CCC;
+            border-bottom: 1px solid #666;
+            padding: 5px 0;
+            text-align: center;
+        }
+
+        .navbar a {
+            display: inline-block;
+            margin: 0 10px;
+            padding: 3px 10px;
+            background-color: #EFEFEF;
+            border: 1px outset #FFF;
+            color: #000;
+            text-decoration: none;
+            font-family: "SimHei", sans-serif;
+            font-size: 13px;
+        }
+
+        .navbar a:hover {
+            border: 1px inset #FFF;
+            background-color: #DDD;
+        }
+
+        /* Marquee / System Status */
+        .status-bar {
+            background-color: #000;
+            color: #0F0;
+            font-family: "Courier New", monospace;
+            padding: 2px 5px;
+            font-size: 12px;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        /* Content Layout */
+        .content-wrapper {
+            display: flex;
+            min-height: 400px;
+        }
+
+        /* Sidebar */
+        aside {
+            width: 200px;
+            background-color: #E8E8E8;
+            border-right: 2px dashed #999;
+            padding: 15px;
+            font-size: 12px;
+        }
+
+        aside h3 {
+            background-color: #003366;
+            color: #FFF;
+            padding: 2px 5px;
+            font-size: 12px;
+            margin-top: 0;
+        }
+
+        aside ul {
+            list-style-type: none;
+            padding-left: 0;
+            line-height: 1.8;
+        }
+
+        /* Main Content Area */
+        main {
+            flex: 1;
+            padding: 20px;
+            background-color: #FFF;
+        }
+
+        /* Welcome Box */
+        .welcome-box {
+            background-color: #FFFFCC;
+            border: 1px solid #999;
+            padding: 10px;
+            margin-bottom: 20px;
+            font-size: 13px;
+        }
+
+        /* Archive Table */
+        table.archive-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-family: "Courier New", monospace;
+            font-size: 12px;
+        }
+
+        table.archive-table th {
+            background-color: #DDD;
+            border: 1px solid #666;
+            padding: 5px;
+            text-align: left;
+        }
+
+        table.archive-table td {
+            border: 1px solid #CCC;
+            padding: 5px;
+        }
+
+        .status-normal { color: green; }
+        .status-warning { color: #DAA520; font-weight: bold; }
+        .status-error { color: red; font-weight: bold; text-decoration: blink; }
+        
+        /* Glitch text effect for hidden clues */
+        .glitch {
+            color: #333;
+            position: relative;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #EEE;
+            border-top: 1px solid #999;
+            padding: 10px;
+            text-align: center;
+            font-size: 11px;
+            color: #666;
+        }
+
+        /* Utility for ARG */
+        .secret-tag {
+            font-size: 10px;
+            color: #FFF;
+            background-color: #000;
+            padding: 0 2px;
+            cursor: default;
+        }
+    </style>
+</head>
+<body>
+
+<div class="window">
+    <header>
+        <img src="https://lostmedia.sytronichub.com/static/img/IMG-01.png" alt="云森市失传媒体资源管理局 标识">
+        <h1>云森市失传媒体资源管理局</h1>
+        <div class="sub-text">YUNSEN LOST MEDIA ADMINISTRATION BUREAU | 公共网络 v1.0.4</div>
+    </header>
+
+    <div class="navbar">
+        <a href="/">首页公告</a> |
+        <a href="/files/">档案索引</a> |
+        <a href="/staff">工作人员</a> |
+        <a href="/plan">公开计划</a> |
+        <a href="/system/status">系统状态</a>
+    </div>
+
+    <!-- 跑马灯：包含 ARG 剧情暗示 -->
+    <div class="status-bar">
+        <marquee scrollamount="3" scrolldelay="100">
+            系统通知：请各位职员注意，YS-LM-0001 号档案音频在 01:17 处存在静音异常，正在复核中。 | 内网安全警告：未授权访问 NULL 数据库将被记录。 | 今日新增：YS-LM-0003 视频素材。
+        </marquee>
+    </div>
+
+    <div class="content-wrapper">
+        <!-- 侧边栏：基础信息 -->
+        <aside>
+            <h3>内部导航</h3>
+            <ul>
+                <li><a href="/files/pending">[+] 待整理文件 (4)</a></li>
+                <li><a href="/files/archived">[+] 已归档文件 (128)</a></li>
+                <li><a href="/files/recycled">[+] 异常报告回收站</a></li>
+                <li><a href="/system/login">[+] 职员登录入口（内网）</a></li>
+            </ul>
+
+            <h3>最新公告</h3>
+            <div style="margin-bottom: 15px; line-height: 1.5;">
+                <strong>2003-11-01:</strong><br>
+                公开档案整理计划启动。首批文件已上传至服务器。请注意检查元数据完整性。
+                <hr style="border: 0; border-top: 1px dashed #999;">
+                <strong>2003-10-28:</strong><br>
+                系统维护日志：修复了南山中继站数据上传时的丢包问题。
+            </div>
+
+            <h3>快速检索</h3>
+            <form onsubmit="event.preventDefault(); alert('检索功能维护中，请手动浏览目录。');">
+                <input type="text" style="width: 90%; font-family: monospace;" placeholder="输入档案编号...">
+                <button type="submit" style="width: 95%; margin-top: 2px;">搜索</button>
+            </form>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main>
+            <div class="welcome-box">
+                <strong>欢迎访问 YS-LMAB 档案终端。</strong><br>
+                本站点用于存储、修复及归档云森市范围内的易失性网络媒体资源。所有数据仅供内部研究使用，严禁私自外传。
+                <br><em>—— 管理局自动回复</em>
+            </div>
+
+            <h2 style="border-bottom: 2px solid #003366; padding-bottom: 5px;">公开档案列表 (PUBLIC ARCHIVES)</h2>
+            <p style="font-size: 12px; color: #666;">*注：部分旧档案正在等待数字化修复。如发现编号不连续，属于正常现象。</p>
+
+            <table class="archive-table">
+                <thead>
+                    <tr>
+                        <th width="15%">档案编号</th>
+                        <th width="35%">文件描述</th>
+                        <th width="15%">日期</th>
+                        <th width="15%">来源</th>
+                        <th width="20%">状态</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- ARG 序章/第一章线索 -->
+                    <tr>
+                        <td><a href="/files/YS-LM-0001">YS-LM-0001</a></td>
+                        <td>云森之声_2014夜间广播.wav</td>
+                        <td>2014-11-04</td>
+                        <td>东区广播塔</td>
+                        <td class="status-warning" title="检测到音频异常停顿">需复核 (01:17)</td>
+                    </tr>
+                    <tr>
+                        <td><a href="/files/YS-LM-0002">YS-LM-0002</a></td>
+                        <td>旧城区街景_未知位置.jpg</td>
+                        <td>2011-05-12</td>
+                        <td>民间捐赠</td>
+                        <td class="status-normal">已修复</td>
+                    </tr>
+                    <tr>
+                        <td><a href="/files/YS-LM-0003">YS-LM-0003</a></td>
+                        <td>云森公海_夜间录像.mp4</td>
+                        <td>2016-08-19</td>
+                        <td>海岸监控</td>
+                        <td class="status-warning">光学异常</td>
+                    </tr>
+                    <!-- 故意跳过 04, 05, 你猜为什么 -->
+                    <tr>
+                        <td>YS-LM-0006</td>
+                        <td>早期网络论坛数据备份.sql</td>
+                        <td>2008-03-01</td>
+                        <td>网络爬虫</td>
+                        <td class="status-normal">已归档</td>
+                    </tr>
+                    <!-- 那么，07呢？ -->
+                    <tr>
+                        <td>YS-LM-0008</td>
+                        <td>地铁2号线施工记录.pdf</td>
+                        <td>2010-12-10</td>
+                        <td>建设局</td>
+                        <td class="status-normal">已解密</td>
+                    </tr>
+                    <tr>
+                        <td>YS-LM-0009</td>
+                        <td>废弃软盘集合_01.zip</td>
+                        <td>1999-??-??</td>
+                        <td>未知</td>
+                        <td class="status-error">数据损坏</td>
+                    </tr>
+                    <tr>
+                        <td>YS-LM-0014</td>
+                        <td>[权限不足]</td>
+                        <td>----</td>
+                        <td>----</td>
+                        <td class="status-error">锁定</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div style="margin-top: 20px; text-align: right;">
+                <a href="/files/" style="font-size: 11px;">查看更多历史档案 >></a>
+            </div>
+
+            <div style="margin-top: 40px; border: 1px solid #ddd; padding: 10px; background: #f9f9f9;">
+                <h4 style="margin: 0 0 5px 0; font-family: 'Courier New';">系统日志 (SYSTEM LOG)</h4>
+                <code style="font-size: 11px; color: #555;">
+                    [10:24:01] Connection established from 192.168.x.x<br>
+                    [10:24:05] Loading module: ARCHIVE_VIEWER<br>
+                    [10:24:06] WARNING: Metadata conflict in /item/01<br>
+                    [10:24:08] Rendering page... OK<br>
+                    [10:24:09] NULL_POINTER_EXCEPTION ignored.
+                </code>
+            </div>
+        </main>
+    </div>
+
+    <footer>
+        <p>&copy; 2010-2024 云森市失传媒体资源管理局 (YS-LMAB)</p>
+        <p>本系统由 Sytroni Hub 提供技术支持 | <a href="/policies/privacy">隐私政策</a> | <a href="/policies/disclaimer">免责声明</a></p>
+        <p style="font-family: monospace; font-size: 10px; color: #999;">SERVER_ID: CLOUD_FOREST_07</p>
+    </footer>
+</div>
+
+<script>
+    console.log("%c YS-LMAB SYSTEM NOTICE ", "background: #003366; color: #fff; font-size: 14px; padding: 4px;");
+    console.log("警告：检测到外部访问请求。部分档案（如 /files/01/）可能存在视图偏差。");
+    console.log("如果档案编号不连续，请尝试直接访问跳过的编号。");
+    console.log("记住：NULL 不会删除记忆，只会删除记录。");
+
+    // 简单的交互：点击职员登录
+    const staffLink = document.querySelector('a[href="#"]');
+    // 这里目前不实际做跳转，只是模拟
+</script>
+
+<!-- 
+    TIPS:
+    1. 提示 /files/01 和 /files/01/ 不同
+    2. 提示 NULL
+    3. 提示编号缺失
+-->
+<!-- 
+    ADMIN NOTE:
+    若用户访问 /item/07/ 或 /item/13/，请返回 403 Forbidden 页面，
+    但源代码中需包含 "RECORD_DELETED_BY_NULL" 字样。
+-->
+<!-- 
+    以及，非必要不看源码^_^
+-->
+
+</body>
+</html>
