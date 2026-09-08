@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- ARG Hint: Check the list carefully. Is something missing? -->
+    <meta name="description" content="云森市失传媒体资源管理局 - 档案全库索引 0001-0021">
+    <title>档案全库索引 | YS-LMAB</title>
+    <style>
+        /* Reusing Core Styles for Consistency */
+        body {
+            background-color: #E0E0E0;
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAABZJREFUeNpi/P//PwM6YGLAAjgUBAgwADZ8Br1+k0pVAAAAAElFTkSuQmCC');
+            color: #333;
+            font-family: "SimSun", "Songti SC", "Times New Roman", serif;
+            margin: 0;
+            padding: 15px;
+            font-size: 14px;
+        }
+
+        a:link { color: #0000EE; text-decoration: underline; }
+        a:visited { color: #551A8B; text-decoration: underline; }
+        a:hover { color: #FF0000; cursor: pointer; }
+        
+        .window {
+            width: 900px;
+            margin: 0 auto;
+            background-color: #F5F5F5;
+            border: 2px solid #888;
+            box-shadow: 4px 4px 0px #555;
+            min-height: 600px;
+        }
+
+        header {
+            background-color: #003366;
+            color: #FFF;
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            border-bottom: 4px solid #999;
+        }
+
+        header img {
+            height: 60px;
+            margin-right: 15px;
+        }
+
+        .header-text h2 {
+            margin: 0;
+            font-size: 20px;
+            letter-spacing: 1px;
+        }
+
+        .header-text p {
+            margin: 5px 0 0 0;
+            font-size: 12px;
+            color: #AAB;
+            font-family: "Courier New", monospace;
+        }
+
+        .navbar {
+            background-color: #CCC;
+            border-bottom: 1px solid #666;
+            padding: 5px;
+        }
+        
+        .navbar a {
+            display: inline-block;
+            padding: 3px 10px;
+            background-color: #EFEFEF;
+            border: 1px outset #FFF;
+            color: #000;
+            text-decoration: none;
+            font-size: 12px;
+            margin-right: 5px;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        /* Filter Toolbar - Purely Visual */
+        .toolbar {
+            background-color: #DDD;
+            padding: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #999;
+            font-size: 12px;
+        }
+        
+        .toolbar select {
+            font-family: monospace;
+        }
+
+        /* Archive Table Specifics */
+        table.archive-list {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: "Courier New", monospace;
+            font-size: 12px;
+        }
+
+        table.archive-list th {
+            background-color: #003366;
+            color: #FFF;
+            padding: 5px;
+            text-align: left;
+            border: 1px solid #002244;
+        }
+
+        table.archive-list td {
+            padding: 4px 8px;
+            border-bottom: 1px solid #CCC;
+        }
+
+        /* Zebra striping old school style */
+        tr:nth-child(even) {
+            background-color: #F0F0F0;
+        }
+
+        /* Status Colors */
+        .s-ok { color: green; }
+        .s-warn { color: #DAA520; font-weight: bold; }
+        .s-err { color: red; font-weight: bold; }
+        .s-lock { color: #888; font-style: italic; }
+        .s-del { text-decoration: line-through; color: #A00; }
+
+        /* Highlighted row for players */
+        .anomaly-row {
+            background-color: #FFF0F0 !important;
+        }
+
+        .footer-note {
+            margin-top: 20px;
+            border-top: 1px solid #999;
+            padding-top: 10px;
+            font-size: 11px;
+            color: #666;
+            text-align: center;
+        }
+        
+        /* Glitch effect for text */
+        .glitch-text {
+            display: inline-block;
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+
+<div class="window">
+    <header>
+        <!-- Logo Link -->
+        <a href="index.html">
+            <img src="https://lostmedia.sytronichub.com/static/img/IMG-01.png" alt="Logo">
+        </a>
+        <div class="header-text">
+            <h2>档案全库索引</h2>
+            <p>ARCHIVE MASTER INDEX | 检索范围: 0001 - 0021</p>
+        </div>
+    </header>
+
+    <div class="navbar">
+        <a href="/">[<] 返回首页</a>
+        <a href="#">刷新列表</a>
+        <a href="#">导出日志</a>
+        <a href="#">管理员登录</a>
+    </div>
+
+    <div class="content">
+        <div class="toolbar">
+            筛选条件: 
+            <select>
+                <option>所有状态</option>
+                <option>正常</option>
+                <option>异常</option>
+                <option>已锁定</option>
+            </select>
+            <span style="margin-left: 20px; color: #555;">当前显示条目: 19 / 21</span>
+        </div>
+
+        <table class="archive-list">
+            <thead>
+                <tr>
+                    <th width="12%">档案编号</th>
+                    <th width="40%">文件名 / 内容描述</th>
+                    <th width="15%">归档日期</th>
+                    <th width="13%">密级</th>
+                    <th width="20%">当前状态</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- 0001 -->
+                <tr class="anomaly-row">
+                    <td><a href="/files/YS-LM-0001">YS-LM-0001</a></td>
+                    <td>云森之声_2014夜间广播.wav <span style="font-size:10px;color:red;">[需复核]</span></td>
+                    <td>2014-11-04</td>
+                    <td>内部</td>
+                    <td class="s-warn">音频静音 (01:17)</td>
+                </tr>
+                <!-- 0002 -->
+                <tr>
+                    <td><a href="/files/YS-LM-0002">YS-LM-0002</a></td>
+                    <td>旧城区街景_未知位置.jpg</td>
+                    <td>2011-05-12</td>
+                    <td>公开</td>
+                    <td class="s-ok">元数据错误</td>
+                </tr>
+                <!-- 0003 -->
+                <tr class="anomaly-row">
+                    <td><a href="/files/YS-LM-0003">YS-LM-0003</a></td>
+                    <td>云森公海_夜间录像.mp4</td>
+                    <td>2016-08-19</td>
+                    <td>内部</td>
+                    <td class="s-warn">光学异常</td>
+                </tr>
+                <!-- 0004 - Filler -->
+                <tr>
+                    <td>YS-LM-0004</td>
+                    <td>1998年度办公耗材采购清单.pdf</td>
+                    <td>1999-01-15</td>
+                    <td>公开</td>
+                    <td class="s-ok">已数字化</td>
+                </tr>
+                <!-- 0005 - Filler -->
+                <tr>
+                    <td>YS-LM-0005</td>
+                    <td>云森早期门户网站镜像(2003版).zip</td>
+                    <td>2008-05-20</td>
+                    <td>公开</td>
+                    <td class="s-ok">可访问</td>
+                </tr>
+                <!-- 0006 - Filler -->
+                <tr>
+                    <td>YS-LM-0006</td>
+                    <td>地铁2号线C标段施工记录.doc</td>
+                    <td>2010-12-10</td>
+                    <td>内部</td>
+                    <td class="s-ok">只读</td>
+                </tr>
+                
+                <!-- 0007 - MISSING (CLUE) -->
+                <!-- Intentionally skipped to create the visual gap -->
+
+                <!-- 0008 - Filler -->
+                <tr>
+                    <td>YS-LM-0008</td>
+                    <td>2008年城市交通监控数据备份(第3季度)</td>
+                    <td>2008-10-01</td>
+                    <td>机密</td>
+                    <td class="s-lock">需L2权限</td>
+                </tr>
+                <!-- 0009 - Filler -->
+                <tr>
+                    <td>YS-LM-0009</td>
+                    <td>回收软盘集合_01.img (已损坏)</td>
+                    <td>2012-03-11</td>
+                    <td>公开</td>
+                    <td class="s-err">扇区无法读取</td>
+                </tr>
+                <!-- 0010 - Filler -->
+                <tr>
+                    <td>YS-LM-0010</td>
+                    <td>云森市第八届海滨艺术节照片集</td>
+                    <td>2012-08-15</td>
+                    <td>公开</td>
+                    <td class="s-ok">已归档</td>
+                </tr>
+                <!-- 0011 - Filler -->
+                <tr>
+                    <td>YS-LM-0011</a></td>
+                    <td>废弃广播站环境音样本.wav</td>
+                    <td>2015-04-02</td>
+                    <td>公开</td>
+                    <td class="s-ok">纯净采样</td>
+                </tr>
+                <!-- 0012 - Filler -->
+                <tr>
+                    <td>YS-LM-0012</td>
+                    <td>关于市民反映“海市蜃楼”现象的会议纪要</td>
+                    <td>2015-09-20</td>
+                    <td>内部</td>
+                    <td class="s-ok">已归档</td>
+                </tr>
+
+                <!-- 0013 - MISSING (CLUE) -->
+                <!-- Intentionally skipped to create the visual gap -->
+
+                <!-- 0014 - Filler -->
+                <tr>
+                    <td>YS-LM-0014</td>
+                    <td>南山林区防火监控日志_2017</td>
+                    <td>2017-12-31</td>
+                    <td>机密</td>
+                    <td class="s-lock">需L2权限</td>
+                </tr>
+                <!-- 0015 - Filler/Atmosphere -->
+                <tr>
+                    <td>YS-LM-0015</td>
+                    <td>无标题录音带_长度45min_静音</td>
+                    <td>2018-06-??</td>
+                    <td>未知</td>
+                    <td class="s-warn">来源不明</td>
+                </tr>
+                <!-- 0016 - Filler -->
+                <tr>
+                    <td>YS-LM-0016</td>
+                    <td>旧城区拆迁前全景扫描图.tiff</td>
+                    <td>2019-03-10</td>
+                    <td>公开</td>
+                    <td class="s-ok">高清扫描</td>
+                </tr>
+                <!-- 0017 - SPECIAL (Reference to Video Asset) -->
+                <tr>
+                    <td class="s-del">YS-LM-0017</td>
+                    <td>[已销毁] 原涉及异常活动的目击报告</td>
+                    <td>2020-01-05</td>
+                    <td>绝密</td>
+                    <td class="s-del">物理销毁</td>
+                </tr>
+                <!-- 0018 - Filler -->
+                <tr>
+                    <td>YS-LM-0018</td>
+                    <td>新员工入职培训手册_v4.pdf</td>
+                    <td>2021-01-10</td>
+                    <td>内部</td>
+                    <td class="s-ok">当前版本</td>
+                </tr>
+                <!-- 0019 - Filler -->
+                <tr>
+                    <td>YS-LM-0019</td>
+                    <td>2018年台风“山竹”过境受损记录</td>
+                    <td>2018-09-18</td>
+                    <td>公开</td>
+                    <td class="s-ok">已归档</td>
+                </tr>
+                <!-- 0020 - Filler/Clue -->
+                <tr>
+                    <td>YS-LM-0020</td>
+                    <td>系统管理员遗留的邮件头数据.eml</td>
+                    <td>2021-11-04</td>
+                    <td>机密</td>
+                    <td class="s-warn">发件人无法解析</td>
+                </tr>
+                <!-- 0021 - ENDGAME HINT -->
+                <tr class="anomaly-row">
+                    <td><a href="#" style="color:red;">YS-LM-0021</a></td>
+                    <td>NULL_DATACORE.LOG</td>
+                    <td>----</td>
+                    <td>???</td>
+                    <td class="s-err">正在写入...</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="footer-note">
+            <p>注意：部分档案因年代久远或数据损坏，可能无法正常预览。<br>
+            如需查阅机密级以上档案，请携带工牌前往3号机房终端操作。</p>
+            <p style="font-family: monospace; margin-top: 10px;">SYS.LOG: Last scan detected integrity errors in index blocks 07 and 13.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Console Hint for the puzzle
+    console.group("YS-LMAB SYSTEM");
+    console.log("检索完成: 19 条记录。");
+    console.warn("警告: 索引表完整性校验失败。丢失扇区: 07, 13。");
+    console.log("系统建议: 尝试直接访问丢失扇区的文件路径。");
+    console.groupEnd();
+
+    // Simple interaction: Clicking status codes
+    document.querySelectorAll('.s-warn, .s-err').forEach(el => {
+        el.style.cursor = 'help';
+        el.title = "点击查看详情";
+        el.onclick = function() {
+            alert("系统提示: 该文件正在等待管理员授权，或存在无法解析的数据段。");
+        }
+    });
+</script>
+
+<!-- 
+    HIDDEN COMMENT FOR PLAYERS (Source Code Puzzle):
+    Don't just look at the table. Look at what ISN'T there.
+    Why did we skip 07?
+    Why did we skip 13?
+    Check the server response for /files/YS-LM-0007(/)
+-->
+
+</body>
+</html>
