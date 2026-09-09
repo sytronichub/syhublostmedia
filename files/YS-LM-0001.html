@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="YS-LM-0001 档案详情页 - 含音频回放功能">
+    <title>档案详情: YS-LM-0001 | 云森市失传媒体资源管理局</title>
+    <style>
+        /* Core Styles Inheritance */
+        body {
+            background-color: #E0E0E0;
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAABZJREFUeNpi/P//PwM6YGLAAjgUBAgwADZ8Br1+k0pVAAAAAElFTkSuQmCC');
+            color: #333;
+            font-family: "SimSun", "Songti SC", "Times New Roman", serif;
+            margin: 0;
+            padding: 15px;
+            font-size: 14px;
+        }
+
+        a:link { color: #0000EE; text-decoration: underline; }
+        a:visited { color: #551A8B; text-decoration: underline; }
+        a:hover { color: #FF0000; cursor: pointer; }
+
+        .window {
+            width: 800px;
+            margin: 0 auto;
+            background-color: #F5F5F5;
+            border: 2px solid #888;
+            box-shadow: 4px 4px 0px #555;
+        }
+
+        header {
+            background-color: #003366;
+            color: #FFF;
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            border-bottom: 4px solid #999;
+        }
+
+        header img {
+            height: 50px;
+            margin-right: 15px;
+        }
+
+        .header-text h2 {
+            margin: 0;
+            font-size: 18px;
+        }
+        
+        .breadcrumb {
+            background-color: #DDD;
+            padding: 5px 15px;
+            font-size: 12px;
+            border-bottom: 1px solid #CCC;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        /* File Meta Data */
+        .file-meta {
+            background-color: #E6E6E6;
+            border: 1px solid #999;
+            padding: 10px;
+            margin-bottom: 20px;
+            font-size: 12px;
+        }
+        
+        .file-meta table {
+            width: 100%;
+        }
+        
+        .file-meta td {
+            padding: 4px;
+            border-bottom: 1px solid #CCC;
+        }
+
+        .file-meta td:first-child {
+            font-weight: bold;
+            width: 100px;
+            color: #003366;
+        }
+
+        /* Fake Audio Player Styling */
+        .player-container {
+            background-color: #333;
+            border: 2px inset #555;
+            padding: 15px;
+            color: #0F0;
+            font-family: "Courier New", monospace;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .player-screen {
+            background-color: #000;
+            border: 1px inset #444;
+            height: 80px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Simulated Spectrum Analyzer */
+        .spectrum {
+            display: flex;
+            align-items: flex-end;
+            gap: 3px;
+            height: 60px;
+        }
+        .bar {
+            width: 5px;
+            background-color: #0F0;
+            height: 10%;
+            transition: height 0.1s;
+        }
+
+        .player-status {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            font-size: 10px;
+            color: #888;
+        }
+
+        .pause-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(50, 20, 20, 0.6);
+            display: none; /* Hidden by default */
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            border: 2px solid red;
+        }
+        
+        .pause-text {
+            color: red;
+            font-size: 24px;
+            font-weight: bold;
+            animation: blink 0.8s infinite;
+            text-shadow: 2px 2px #000;
+        }
+
+        @keyframes blink { 50% { opacity: 0.3; } }
+
+        .player-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .control-group {
+            display: flex;
+            gap: 5px;
+        }
+
+        .time-display {
+            font-size: 24px;
+            color: #FFA500; 
+            text-shadow: 0 0 5px #FFA500;
+            background: #000;
+            padding: 5px 10px;
+            border: 1px inset #555;
+            min-width: 100px;
+            text-align: center;
+        }
+        
+        .btn {
+            background: #555;
+            border: 2px outset #777;
+            color: #FFF;
+            padding: 5px 15px;
+            cursor: pointer;
+            font-family: "SimHei", sans-serif;
+            font-size: 12px;
+            min-width: 60px;
+        }
+        
+        .btn:active {
+            border: 2px inset #777;
+            background: #444;
+        }
+        
+        .btn-secondary {
+            background: #444;
+            font-size: 11px;
+        }
+
+        /* Transcript Box */
+        .transcript {
+            border: 1px solid #003366;
+            padding: 20px;
+            background-color: #FFF;
+            font-family: "KaiTi", "SimSun", serif;
+            font-size: 16px;
+            line-height: 1.8;
+            color: #222;
+            text-align: justify;
+        }
+
+        .transcript h3 {
+            margin-top: 0;
+            border-bottom: 1px dashed #003366;
+            font-size: 16px;
+            font-family: "SimHei", sans-serif;
+            text-align: left;
+        }
+
+        .highlight-time {
+            color: #999;
+            font-size: 12px;
+            font-family: monospace;
+            margin-right: 5px;
+            background-color: #EEE;
+            padding: 0 3px;
+        }
+
+        /* Highlight current reading line logic */
+        .reading-active {
+            background-color: #FFFFCC;
+            transition: background-color 0.5s;
+        }
+
+        .sys-note {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px dashed #999;
+            background-color: #FFC;
+            font-size: 11px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+
+<div class="window">
+    <header>
+        <a href="/"><img src="https://lostmedia.sytronichub.com/static/img/IMG-01.png" alt="Logo"></a>
+        <div class="header-text">
+            <h2>档案详情视图</h2>
+        </div>
+    </header>
+
+    <div class="breadcrumb">
+        <a href="/">首页</a> > <a href="/files/">档案全库</a> > YS-LM-0001
+    </div>
+
+    <div class="content">
+        <!-- Metadata Section -->
+        <div class="file-meta">
+            <table>
+                <tr>
+                    <td>档案编号</td>
+                    <td>YS-LM-0001</td>
+                </tr>
+                <tr>
+                    <td>文件名称</td>
+                    <td>2014_East_District_Night_Broadcast.wav</td>
+                </tr>
+                <tr>
+                    <td>媒体类型</td>
+                    <td>音频 / MP3 (数字化备份)</td>
+                </tr>
+                <tr>
+                    <td>录制时间</td>
+                    <td>2014年11月04日 23:50 - 00:10</td>
+                </tr>
+                <tr>
+                    <td>来源地点</td>
+                    <td>云森市东区广播塔 (频率 FM 99.9)</td>
+                </tr>
+                <tr>
+                    <td>当前状态</td>
+                    <td><span style="color:#DAA520; font-weight:bold;">需复核 (01:17 存在信号停顿)</span></td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Player Section -->
+        <div class="player-container">
+            <!-- Hidden Audio Element -->
+            <audio id="main-audio" src="https://lostmedia.sytronichub.com/static/audio/AUD-01.mp3" preload="auto"></audio>
+
+            <div class="player-screen">
+                <div class="spectrum" id="spectrum">
+                    <!-- Bars generated by JS -->
+                </div>
+                <div class="player-status">AUDIO ENGINE: READY</div>
+                
+                <!-- Pause Overlay -->
+                <div class="pause-overlay" id="pause-overlay">
+                    <div class="pause-text">01:17 信号停顿</div>
+                    <div style="color: white; margin-top: 5px; font-size: 12px;">SIGNAL PAUSED...</div>
+                </div>
+            </div>
+            
+            <div class="player-controls">
+                <div class="control-group">
+                    <button class="btn" onclick="player.togglePlay()">[播放/暂停]</button>
+                    <button class="btn" onclick="player.stop()">[停止]</button>
+                </div>
+                
+                <div class="time-display" id="time-display">00:00</div>
+            </div>
+            <!-- Progress Bar -->
+            <div style="width: 100%; height: 6px; background: #222; margin-top: 15px; border: 1px inset #555;">
+                <div id="progress-bar" style="width: 0%; height: 100%; background: #FFA500;"></div>
+            </div>
+            <div style="text-align: right; font-size: 10px; color: #666; margin-top: 2px;">DURATION: --:--</div>
+        </div>
+
+        <!-- ARG Hint -->
+        <div class="sys-note">
+            <strong>系统备注 (仅供内部技术人员查看):</strong><br>
+            该文件的完整频谱分析日志已归档。由于系统安全策略限制，公共视图无法显示详细数据。<br>
+            <em style="color: #999;">错误代码：PATH_INCOMPLETE. 建议检查请求路径是否包含正确的目录终结符。</em>
+        </div>
+
+        <div style="margin-top: 20px; text-align: center;">
+            <a href="/files/">[<] 返回列表</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    /**
+     * Player Controller
+     * Handles Audio Playback, SpeechSynthesis (TTS), and Timer Logic
+     */
+    const player = {
+        audio: document.getElementById('main-audio'),
+        timerInterval: null,
+        visualizerInterval: null,
+        currentTime: 0,
+        isPaused: false, // Tracks the "System Pause" at 01:17
+        ttsEnabled: false,
+        ttsStarted: false,
+        
+        // Constants
+        startTTSTime: 27, // 27 seconds
+        pauseEventTime: 77, // 01:17 in seconds
+        pauseDuration: 3000, // 3 seconds
+        
+        init: function() {
+            // Load voices immediately
+            window.speechSynthesis.getVoices();
+            
+            this.audio.addEventListener('timeupdate', () => {
+                this.updateUI();
+                this.checkEvents();
+            });
+            
+            this.audio.addEventListener('ended', () => {
+                this.stopVisualizer();
+                window.speechSynthesis.cancel();
+                clearInterval(this.timerInterval);
+            });
+
+            this.audio.addEventListener('error', (e) => {
+                console.error("Audio Error:", e);
+                document.querySelector('.player-status').innerText = "AUDIO LOAD ERROR: CHECK SOURCE URL";
+                document.querySelector('.player-status').style.color = "red";
+            });
+        },
+
+        togglePlay: function() {
+            if (this.audio.paused) {
+                this.audio.play();
+                this.startVisualizer();
+            } else {
+                this.audio.pause();
+                this.stopVisualizer();
+                // If paused by user, also pause TTS
+                if (this.ttsEnabled) {
+                    window.speechSynthesis.pause();
+                }
+            }
+        },
+
+        stop: function() {
+            this.audio.pause();
+            this.audio.currentTime = 0;
+            this.stopVisualizer();
+            window.speechSynthesis.cancel();
+            this.ttsStarted = false;
+            
+            // Reset UI
+            document.getElementById('pause-overlay').style.display = 'none';
+            document.getElementById('time-display').style.color = "#FFA500";
+            this.updateUI();
+        },
+
+        startVisualizer: function() {
+            if (this.visualizerInterval) return;
+            const spectrum = document.getElementById('spectrum');
+            spectrum.innerHTML = '';
+            for(let i=0; i<20; i++) {
+                const bar = document.createElement('div');
+                bar.className = 'bar';
+                spectrum.appendChild(bar);
+            }
+            
+            this.visualizerInterval = setInterval(() => {
+                const bars = document.querySelectorAll('.bar');
+                bars.forEach(bar => {
+                    bar.style.height = (Math.random() * 70 + 10) + '%';
+                });
+            }, 100);
+        },
+
+        stopVisualizer: function() {
+            clearInterval(this.visualizerInterval);
+            this.visualizerInterval = null;
+            document.querySelectorAll('.bar').forEach(bar => bar.style.height = '10%');
+        },
+
+        toggleSpeech: function() {
+            if (this.ttsEnabled) {
+                this.ttsEnabled = false;
+                window.speechSynthesis.cancel();
+                return;
+            }
+            
+            this.ttsEnabled = true;
+            // If audio is already past start time, start immediately, otherwise wait
+            if (this.audio.currentTime >= this.startTTSTime && !this.audio.paused) {
+                this.startTTS();
+            } else if (this.audio.paused) {
+                // User clicked TTS but audio is stopped. Just show enabled state.
+                // Actual speech starts when user hits Play
+            }
+        },
+
+        startTTS: function() {
+            if (this.ttsStarted) return;
+            
+            // Get text content
+            const fullText = document.getElementById('transcript-content').innerText;
+            
+            this.utterance = new SpeechSynthesisUtterance(fullText);
+            this.utterance.lang = 'zh-CN';
+            this.utterance.rate = 1.0; 
+            
+            // Try to pick a soft female voice (radio host vibe)
+            const voices = window.speechSynthesis.getVoices();
+            const zhVoice = voices.find(v => v.lang.includes('zh') && (v.name.includes('Google') || v.name.includes('Lili') || v.name.includes('Kangkang')));
+            if (zhVoice) this.utterance.voice = zhVoice;
+
+            window.speechSynthesis.speak(this.utterance);
+            this.ttsStarted = true;
+        },
+
+        checkEvents: function() {
+            const t = this.audio.currentTime;
+
+            // 1. Start TTS at 27s
+            if (this.ttsEnabled && !this.ttsStarted && t >= this.startTTSTime && !this.audio.paused) {
+                this.startTTS();
+            }
+
+            // 2. Pause Event at 01:17 (77s)
+            if (Math.abs(t - this.pauseEventTime) < 0.2 && !this.isPaused) {
+                this.triggerSystemPause();
+            }
+        },
+
+        triggerSystemPause: function() {
+            this.isPaused = true;
+            
+            // Pause Audio
+            this.audio.pause();
+            
+            // Pause Speech
+            if (this.ttsEnabled) {
+                window.speechSynthesis.pause();
+            }
+            
+            // Show Overlay
+            document.getElementById('pause-overlay').style.display = 'flex';
+            
+            // Stop visualizer to freeze motion
+            this.stopVisualizer();
+
+            // Resume after 3 seconds
+            setTimeout(() => {
+                if (this.isPaused) { // Check if user didn't stop manually
+                    this.audio.play();
+                    this.startVisualizer();
+                    if (this.ttsEnabled) {
+                        window.speechSynthesis.resume();
+                    }
+                    document.getElementById('pause-overlay').style.display = 'none';
+                    this.isPaused = false;
+                }
+            }, this.pauseDuration);
+        },
+
+        updateUI: function() {
+            const t = this.audio.currentTime;
+            const minutes = Math.floor(t / 60);
+            const seconds = Math.floor(t % 60);
+            const timeStr = (minutes < 10 ? '0' : '') + minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+            
+            const display = document.getElementById('time-display');
+            display.innerText = timeStr;
+            
+            // Highlight text during glitch time
+            if (t >= this.pauseEventTime && t < this.pauseEventTime + 4) {
+                 display.style.color = 'red';
+            } else {
+                 display.style.color = '#FFA500';
+            }
+
+            // Progress bar (estimated duration, or just based on 5 min)
+            const progress = (t / 300) * 100; 
+            document.getElementById('progress-bar').style.width = progress + "%";
+        }
+    };
+
+    // Initialize
+    player.init();
+
+    console.log("YS-LM-0001 Loaded. External Audio Source Configured.");
+</script>
+
+</body>
+</html>
