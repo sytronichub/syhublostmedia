@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="YS-LM-0002 档案详情页 - 图片档案">
+    <title>档案详情: YS-LM-0002 | 云森市失传媒体资源管理局</title>
+    <style>
+        /* ============================================
+           Core Styles (与 YS-LM-0001 完全一致)
+           ============================================ */
+        body {
+            background-color: #E0E0E0;
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAABZJREFUeNpi/P//PwM6YGLAAjgUBAgwADZ8Br1+k0pVAAAAAElFTkSuQmCC');
+            color: #333;
+            font-family: "SimSun", "Songti SC", "Times New Roman", serif;
+            margin: 0;
+            padding: 15px;
+            font-size: 14px;
+        }
+
+        a:link {
+            color: #0000EE;
+            text-decoration: underline;
+        }
+        a:visited {
+            color: #551A8B;
+            text-decoration: underline;
+        }
+        a:hover {
+            color: #FF0000;
+            cursor: pointer;
+        }
+
+        /* ---- Window Frame ---- */
+        .window {
+            width: 800px;
+            margin: 0 auto;
+            background-color: #F5F5F5;
+            border: 2px solid #888;
+            box-shadow: 4px 4px 0px #555;
+        }
+
+        /* ---- Header ---- */
+        header {
+            background-color: #003366;
+            color: #FFF;
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            border-bottom: 4px solid #999;
+        }
+        header img {
+            height: 50px;
+            margin-right: 15px;
+        }
+        .header-text h2 {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        /* ---- Breadcrumb ---- */
+        .breadcrumb {
+            background-color: #DDD;
+            padding: 5px 15px;
+            font-size: 12px;
+            border-bottom: 1px solid #CCC;
+        }
+
+        /* ---- Content ---- */
+        .content {
+            padding: 20px;
+        }
+
+        /* ---- File Meta Table ---- */
+        .file-meta {
+            background-color: #E6E6E6;
+            border: 1px solid #999;
+            padding: 10px;
+            margin-bottom: 20px;
+            font-size: 12px;
+        }
+        .file-meta table {
+            width: 100%;
+        }
+        .file-meta td {
+            padding: 4px;
+            border-bottom: 1px solid #CCC;
+        }
+        .file-meta td:first-child {
+            font-weight: bold;
+            width: 100px;
+            color: #003366;
+        }
+
+        /* ---- Image Viewer (替换音频播放器) ---- */
+        .image-viewer {
+            background-color: #333;
+            border: 2px inset #555;
+            padding: 15px;
+            color: #0F0;
+            font-family: "Courier New", monospace;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .image-screen {
+            background-color: #111;
+            border: 1px inset #444;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            min-height: 320px;
+        }
+        .image-screen img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            border: 1px solid #555;
+        }
+        .image-status {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            font-size: 10px;
+            color: #888;
+        }
+        .image-info-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 12px;
+            font-size: 12px;
+            color: #AAA;
+            border-top: 1px solid #444;
+            padding-top: 10px;
+        }
+        .image-info-bar .tag {
+            color: #0F0;
+            background: #222;
+            padding: 2px 8px;
+            border: 1px inset #444;
+            font-size: 10px;
+        }
+
+        /* ---- Description / Transcript (复用 .transcript 样式) ---- */
+        .transcript {
+            border: 1px solid #003366;
+            padding: 20px;
+            background-color: #FFF;
+            font-family: "KaiTi", "SimSun", serif;
+            font-size: 16px;
+            line-height: 1.8;
+            color: #222;
+            text-align: justify;
+            margin-bottom: 20px;
+        }
+        .transcript h3 {
+            margin-top: 0;
+            border-bottom: 1px dashed #003366;
+            font-size: 16px;
+            font-family: "SimHei", sans-serif;
+            text-align: left;
+        }
+
+        /* ---- Auxiliary Image ---- */
+        .aux-block {
+            border: 1px solid #888;
+            padding: 12px;
+            background-color: #F0F0F0;
+            margin-bottom: 20px;
+        }
+        .aux-block .aux-title {
+            font-size: 13px;
+            font-weight: bold;
+            color: #003366;
+            margin-bottom: 8px;
+        }
+        .aux-block .aux-row {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            align-items: flex-start;
+        }
+        .aux-block .aux-row img {
+            max-width: 200px;
+            border: 1px solid #999;
+            background: #FFF;
+            padding: 4px;
+        }
+        .aux-block .aux-caption {
+            font-size: 12px;
+            color: #555;
+            margin-top: 4px;
+        }
+
+        /* ---- Tags ---- */
+        .tag-group {
+            margin-bottom: 20px;
+            font-size: 13px;
+        }
+        .tag-group .tag-label {
+            font-weight: bold;
+            color: #003366;
+            margin-right: 6px;
+        }
+        .tag-group .tag-item {
+            display: inline-block;
+            background: #DDD;
+            padding: 2px 10px;
+            border: 1px solid #AAA;
+            margin-right: 4px;
+            font-size: 12px;
+            color: #333;
+        }
+
+        /* ---- System Note ---- */
+        .sys-note {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px dashed #999;
+            background-color: #FFC;
+            font-size: 11px;
+            color: #555;
+        }
+
+        /* ---- Action Buttons ---- */
+        .actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin: 18px 0 20px 0;
+        }
+        .actions .btn {
+            background: #DDD;
+            border: 2px outset #BBB;
+            color: #333;
+            padding: 6px 18px;
+            cursor: pointer;
+            font-family: "SimHei", sans-serif;
+            font-size: 12px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .actions .btn:active {
+            border: 2px inset #BBB;
+            background: #CCC;
+        }
+        .actions .btn-primary {
+            background: #003366;
+            border-color: #004488;
+            color: #FFF;
+        }
+        .actions .btn-primary:active {
+            background: #002244;
+        }
+
+        /* ---- Footer nav ---- */
+        .back-link {
+            margin-top: 16px;
+            text-align: center;
+            font-size: 13px;
+        }
+
+        /* ---- Responsive ---- */
+        @media (max-width: 820px) {
+            .window {
+                width: 100%;
+                margin: 0;
+            }
+            .file-meta td:first-child {
+                width: 70px;
+            }
+            .aux-block .aux-row {
+                flex-direction: column;
+            }
+            .aux-block .aux-row img {
+                max-width: 100%;
+            }
+            .image-screen {
+                min-height: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="window">
+        <!-- ===== HEADER ===== -->
+        <header>
+            <a href="/"><img src="https://lostmedia.sytronichub.com/static/img/IMG-01.png" alt="Logo"></a>
+            <div class="header-text">
+                <h2>档案详情视图</h2>
+            </div>
+        </header>
+
+        <!-- ===== BREADCRUMB ===== -->
+        <div class="breadcrumb">
+            <a href="/">首页</a> &gt; <a href="/files/">档案全库</a> &gt; YS-LM-0002
+        </div>
+
+        <!-- ===== CONTENT ===== -->
+        <div class="content">
+
+            <!-- Metadata -->
+            <div class="file-meta">
+                <table>
+                    <tr>
+                        <td>档案编号</td>
+                        <td>YS-LM-0002</td>
+                    </tr>
+                    <tr>
+                        <td>文件名称</td>
+                        <td>IMG-05.png</td>
+                    </tr>
+                    <tr>
+                        <td>媒体类型</td>
+                        <td>图片 / PNG (数字化备份)</td>
+                    </tr>
+                    <tr>
+                        <td>采集日期</td>
+                        <td>2023年10月24日</td>
+                    </tr>
+                    <tr>
+                        <td>来源地点</td>
+                        <td>Sytronic Hub · 遗留存储设备</td>
+                    </tr>
+                    <tr>
+                        <td>当前状态</td>
+                        <td><span style="color:#DAA520; font-weight:bold;">需复核 (边缘色差异常)</span></td>
+                    </tr>
+                    <tr>
+                        <td>校验码</td>
+                        <td style="font-family: monospace; font-size: 11px;">e3b0c44298fc1c149afbf4c8996fb92427ae41e4</td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- Image Viewer -->
+            <div class="image-viewer">
+                <div class="image-screen">
+                    <img src="https://lostmedia.sytronichub.com/static/img/IMG-05.png" alt="YS-LM-0002 主图">
+                    <div class="image-status">IMAGE ENGINE: STABLE</div>
+                </div>
+                <div class="image-info-bar">
+                    <span>分辨率: 原始 · 色彩: 8-bit</span>
+                    <span class="tag">⏺ 已数字化归档</span>
+                </div>
+            </div>
+
+            <!-- Description -->
+            <div class="transcript">
+                <h3>📄 档案描述</h3>
+                <p>
+                    该档案包含一张从遗留存储设备中提取的照片。图像内容似乎记录了一个未指明的户外场景，且带有明显的时间侵蚀痕迹。
+                </p>
+                <p>
+                    图像底部的模糊区域可能是由于物理存储介质的受潮或曝光造成的。经数字恢复处理，主体部分的对比度已得到增强，但背景细节依然难以辨识。
+                </p>
+                <p>
+                    <em>注：此文件与 YS-LM-0001 可能存在时间线上的关联。</em>
+                </p>
+            </div>
+
+            <!-- Auxiliary Material -->
+            <div class="aux-block">
+                <div class="aux-title">📎 辅助素材 (Auxiliary Material)</div>
+                <div class="aux-row">
+                    <div>
+                        <img src="https://lostmedia.sytronichub.com/static/img/IMG-03.png" alt="辅助光谱分析图">
+                        <div class="aux-caption">图谱 IMG-03 · 边角色差与光谱异常比对</div>
+                    </div>
+                    <div style="font-size: 13px; color: #444; max-width: 300px;">
+                        <p style="margin:0 0 6px 0;"><strong>分析备注：</strong></p>
+                        <p style="margin:0; font-family: monospace; font-size: 12px; background:#EEE; padding:6px;">
+                            通道偏移: +0.7%<br>
+                            噪点密度: 中等<br>
+                            建议: 二次滤波
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tags -->
+            <div class="tag-group">
+                <span class="tag-label">🏷 分类标签：</span>
+                <span class="tag-item">#照片</span>
+                <span class="tag-item">#旧物</span>
+                <span class="tag-item">#损坏</span>
+                <span class="tag-item">#待修复</span>
+            </div>
+
+            <!-- System Note -->
+            <div class="sys-note">
+                <strong>系统备注 (仅供内部技术人员查看):</strong><br>
+                该文件的完整光谱分析日志已归档。由于系统安全策略限制，公共视图无法显示详细数据。<br>
+                <em style="color: #999;">错误代码：PATH_INCOMPLETE. 建议检查请求路径是否包含正确的目录终结符。</em>
+            </div>
+
+            <!-- Actions -->
+            <div class="actions">
+                <a href="https://lostmedia.sytronichub.com/static/img/IMG-05.png" class="btn btn-primary" target="_blank" download>下载原图源</a>
+                <a href="#" class="btn">报告存档错误</a>
+                <a href="#" class="btn">重新分析</a>
+            </div>
+
+            <!-- Back Link -->
+            <div class="back-link">
+                <a href="/files/">[&lt;] 返回列表</a>
+            </div>
+
+        </div><!-- /content -->
+    </div><!-- /window -->
+
+</body>
+</html>
